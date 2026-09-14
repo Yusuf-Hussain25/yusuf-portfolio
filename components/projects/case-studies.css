@@ -1,0 +1,1073 @@
+/* ───────────────────────── Projects: cards, 3D glass thumbnails, case study ───────────────────────── */
+
+@property --lift {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@layer components {
+  /* ── Cards ── */
+  .pc-card {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    transform: perspective(1600px) rotateX(calc(var(--rx, 0deg) * 0.35)) rotateY(calc(var(--ry, 0deg) * 0.35)) translate3d(0, var(--lift), 0);
+    transition:
+      --lift 0.6s var(--ease-out),
+      box-shadow 0.5s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+  .pc-card:hover,
+  .pc-card:focus-within {
+    --lift: -6px;
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-lift);
+  }
+  .pc-card:has(.pc-open:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .pc-open:focus-visible {
+    outline: none;
+  }
+
+  .pc-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .pc-tag {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+    transition:
+      opacity 0.45s var(--ease-out),
+      transform 0.55s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 45ms);
+  }
+  .pc-card[data-hot] .pc-tag,
+  .pc-card:focus-within .pc-tag {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pc-cta {
+    color: var(--accent);
+    opacity: 0;
+    transform: translate3d(-8px, 0, 0);
+    transition:
+      opacity 0.4s var(--ease-out),
+      transform 0.5s var(--ease-out);
+  }
+  .pc-card[data-hot] .pc-cta,
+  .pc-card:focus-within .pc-cta {
+    opacity: 1;
+    transform: none;
+  }
+  .pc-cta svg {
+    transition: transform 0.4s var(--ease-out);
+  }
+  .pc-card:hover .pc-cta svg {
+    transform: translateX(3px);
+  }
+
+  .pc-fact {
+    transition: color 0.4s var(--ease);
+  }
+  .pc-card:hover .pc-fact {
+    color: var(--foreground);
+  }
+
+  @media (hover: none) {
+    .pc-tag,
+    .pc-cta {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  /* small screens: keep the thumbnail clean; the stack lives in the case study */
+  @media (max-width: 640px) {
+    .pc-tags {
+      display: none;
+    }
+  }
+
+  /* ── Scene ── */
+  .gt-scene {
+    --gt-glass: color-mix(in oklab, var(--surface) 64%, transparent);
+    --gt-edge: color-mix(in oklab, var(--foreground) 9%, transparent);
+    --gt-hi: color-mix(in oklab, var(--surface) 95%, transparent);
+    --gt-sheen: color-mix(in oklab, var(--surface) 75%, transparent);
+    --gt-shadow: 0 1.8cqw 3.6cqw -1.6cqw color-mix(in oklab, var(--foreground) 20%, transparent);
+    --gt-ink: color-mix(in oklab, var(--foreground) 12%, transparent);
+    --gt-ink-strong: color-mix(in oklab, var(--foreground) 28%, transparent);
+    container-type: inline-size;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    perspective: 170cqw;
+    perspective-origin: 50% 35%;
+    background:
+      radial-gradient(70% 60% at 74% 24%, color-mix(in oklab, var(--accent) 15%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 8% 100%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--surface-sunken), var(--background));
+  }
+  [data-theme="dark"] .gt-scene {
+    --gt-glass: color-mix(in oklab, var(--surface-elevated) 58%, transparent);
+    --gt-edge: color-mix(in oklab, var(--foreground) 13%, transparent);
+    --gt-hi: color-mix(in oklab, var(--foreground) 14%, transparent);
+    --gt-sheen: color-mix(in oklab, var(--foreground) 9%, transparent);
+    --gt-shadow: 0 2cqw 4cqw -2cqw color-mix(in oklab, var(--background) 92%, transparent), 0 0 4cqw -1.6cqw color-mix(in oklab, var(--accent) 28%, transparent);
+    --gt-ink: color-mix(in oklab, var(--foreground) 14%, transparent);
+    --gt-ink-strong: color-mix(in oklab, var(--foreground) 32%, transparent);
+  }
+  .gt-scene[data-size="compact"] {
+    aspect-ratio: 16 / 11;
+  }
+  .gt-scene[data-size="hero"] {
+    aspect-ratio: 16 / 8;
+  }
+  @media (max-width: 640px) {
+    .gt-scene[data-size="hero"] {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  .gt-scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 5cqw 5cqw;
+    mask-image: radial-gradient(ellipse at 60% 40%, black 15%, transparent 72%);
+  }
+  .gt-scene::after {
+    content: "";
+    position: absolute;
+    inset: auto 12% 4% 12%;
+    height: 12%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--foreground) 10%, transparent), transparent);
+    filter: blur(1.5cqw);
+  }
+  [data-theme="dark"] .gt-scene::after {
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent);
+  }
+
+  /* --srx/--sry/--sz/--ss/--zs/--pm are registered in thumb-signatures.css so they animate */
+  .gt-stage {
+    position: absolute;
+    inset: 12% 9% 10% 9%;
+    transform-style: preserve-3d;
+    transform: translateZ(var(--sz, 0px)) rotateX(calc(var(--srx, 13deg) + var(--rx, 0deg) * 1.3)) rotateY(calc(var(--sry, -17deg) + var(--ry, 0deg) * 1.3)) rotateZ(1.5deg) scale(var(--ss, 1));
+    transition:
+      --srx 1s var(--ease-out),
+      --sry 1s var(--ease-out),
+      --sz 1s var(--ease-out),
+      --ss 1s var(--ease-out),
+      --zs 1s var(--ease-out),
+      --pm 0.6s var(--ease-out);
+  }
+  .gt-scene[data-size="hero"] .gt-stage {
+    inset: 12% 17% 10% 17%;
+    --srx: 9deg;
+    --sry: -11deg;
+  }
+  @media (max-width: 640px) {
+    .gt-scene[data-size="hero"] .gt-stage {
+      inset: 12% 7% 10% 7%;
+    }
+  }
+
+  .gt-layer {
+    position: absolute;
+    transform:
+      translate3d(
+        calc(var(--px, 0) * var(--z, 0) * var(--pm, 0) * 0.3cqw),
+        calc(var(--py, 0) * var(--z, 0) * var(--pm, 0) * 0.3cqw),
+        calc(var(--z, 0) * var(--zs, 1) * 1cqw)
+      )
+      rotateX(var(--lrx, 0deg));
+    animation: gt-float 7s ease-in-out infinite;
+    animation-delay: calc(var(--fd, 0ms) * -1);
+  }
+
+  .gt-glass {
+    overflow: hidden;
+    padding: 2.2cqw;
+    border-radius: 2.2cqw;
+    background: var(--gt-glass);
+    border: 1px solid var(--gt-edge);
+    box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-hi);
+    backdrop-filter: blur(8px) saturate(1.35);
+    -webkit-backdrop-filter: blur(8px) saturate(1.35);
+  }
+  [data-theme="dark"] .gt-glass {
+    box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-hi), inset 0 0 0 1px color-mix(in oklab, var(--accent) 7%, transparent);
+  }
+  .gt-glass::before,
+  .gt-glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .gt-glass::before {
+    background: linear-gradient(115deg, transparent 36%, var(--gt-sheen) 50%, transparent 64%);
+    transform: translateX(-130%);
+    animation: gt-sheen 5.5s var(--ease) infinite;
+    animation-delay: calc(var(--fd, 0ms) * -1);
+  }
+  .gt-glass::after {
+    background: linear-gradient(165deg, var(--gt-hi), transparent 32%);
+    opacity: 0.55;
+  }
+  .gt-glass > * {
+    position: relative;
+    z-index: 1;
+  }
+  .gt-glass > .gt-abs {
+    position: absolute;
+  }
+
+  /* play control: loops are static until the card is hot (hover / focus / in view on touch) or the hero plays */
+  .gt-scene .gt-layer,
+  .gt-scene .gt-anim,
+  .gt-scene .gt-glass::before {
+    animation-play-state: paused;
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .gt-layer,
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .gt-anim,
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .gt-glass::before {
+    animation-play-state: running;
+  }
+
+  /* ── Scene primitives ── */
+  .gt-label {
+    display: block;
+    margin-bottom: 1.4cqw;
+    font-family: var(--font-mono);
+    font-size: max(6px, 1.9cqw);
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--subtle);
+  }
+  .gt-mini {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: max(6px, 1.8cqw);
+    line-height: 1;
+    color: var(--muted);
+  }
+  .gt-line {
+    display: block;
+    height: max(3px, 1cqw);
+    border-radius: 99px;
+    background: var(--gt-ink);
+  }
+  .gt-line + .gt-line,
+  .gt-row + .gt-line {
+    margin-top: 1.2cqw;
+  }
+  .gt-line-accent {
+    background: color-mix(in oklab, var(--accent) 70%, transparent);
+  }
+  .gt-dots {
+    display: flex;
+    gap: 0.8cqw;
+    margin-bottom: 1.8cqw;
+  }
+  .gt-dots i {
+    width: 1.2cqw;
+    height: 1.2cqw;
+    border-radius: 50%;
+    background: var(--gt-ink-strong);
+  }
+  .gt-tree {
+    display: flex;
+    align-items: center;
+    gap: 1cqw;
+    margin-top: 1.25cqw;
+  }
+  .gt-sq {
+    flex-shrink: 0;
+    width: 1.5cqw;
+    height: 1.5cqw;
+    border-radius: 0.4cqw;
+    background: var(--gt-ink-strong);
+  }
+  .gt-sq-accent {
+    background: var(--accent);
+  }
+  .gt-row {
+    display: flex;
+    align-items: center;
+    gap: 1.4cqw;
+    margin-top: 1.3cqw;
+  }
+  .gt-track {
+    position: relative;
+    flex: 1;
+    height: max(3px, 1cqw);
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--gt-ink);
+  }
+  .gt-track-full {
+    display: block;
+    flex: none;
+    width: 100%;
+    margin: 1.4cqw 0;
+  }
+  .gt-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(var(--s, 0.5));
+  }
+  [data-theme="dark"] .gt-fill {
+    box-shadow: 0 0 1.2cqw color-mix(in oklab, var(--accent) 60%, transparent);
+  }
+  .gt-fill-muted {
+    background: var(--gt-ink-strong);
+    box-shadow: none !important;
+  }
+  .gt-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .gt-edge {
+    fill: none;
+    stroke: var(--gt-ink-strong);
+    stroke-width: 0.5;
+  }
+  .gt-edge-flow {
+    stroke: var(--accent);
+    stroke-width: 0.7;
+    stroke-dasharray: 2 2.5;
+    animation: gt-dash 1.1s linear infinite;
+  }
+  .gt-node {
+    fill: var(--surface);
+    stroke: var(--gt-ink-strong);
+    stroke-width: 0.5;
+  }
+  .gt-node-accent {
+    fill: var(--accent);
+  }
+  .gt-node-query {
+    fill: var(--surface);
+    stroke: var(--accent);
+    stroke-width: 1.2;
+  }
+  .gt-dot {
+    fill: var(--gt-ink-strong);
+  }
+  .gt-radius {
+    fill: color-mix(in oklab, var(--accent) 8%, transparent);
+    stroke: color-mix(in oklab, var(--accent) 45%, transparent);
+    stroke-width: 0.4;
+    stroke-dasharray: 1.5 1.5;
+  }
+  .gt-pulse {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 0.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: gt-pulse 2.4s var(--ease-out) infinite;
+  }
+  .gt-box {
+    fill: var(--surface);
+    stroke: var(--gt-ink-strong);
+    stroke-width: 0.5;
+  }
+  .gt-box-accent {
+    fill: color-mix(in oklab, var(--accent) 14%, var(--surface));
+    stroke: var(--accent);
+    stroke-width: 0.7;
+  }
+  .gt-svg-text {
+    font-family: var(--font-mono);
+    font-size: 4.2px;
+    text-anchor: middle;
+    fill: var(--muted);
+  }
+  .gt-svg-text-accent {
+    fill: var(--accent);
+  }
+
+  /* voice */
+  .gt-rec {
+    width: 1.4cqw;
+    height: 1.4cqw;
+    margin-bottom: 1.4cqw;
+    border-radius: 50%;
+    background: var(--danger);
+    animation: breathe 1.6s ease-in-out infinite;
+  }
+  .gt-wave {
+    display: flex;
+    align-items: center;
+    gap: 0.6cqw;
+    height: 13cqw;
+    margin: 0.6cqw 0 2cqw;
+  }
+  .gt-bar {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 99px;
+    background: linear-gradient(180deg, var(--accent), color-mix(in oklab, var(--accent) 35%, transparent));
+    animation: gt-wave 1.2s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -85ms);
+  }
+  .gt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1cqw;
+  }
+  .gt-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 3.6cqw;
+    padding: 0 1.4cqw;
+    border-radius: 99px;
+    border: 1px solid var(--gt-edge);
+    background: color-mix(in oklab, var(--surface) 70%, transparent);
+    font-family: var(--font-mono);
+    font-size: max(6px, 1.75cqw);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .gt-chip-cycle {
+    animation: gt-chip 3.6s var(--ease) infinite;
+    animation-delay: calc(var(--i) * -1.2s);
+  }
+  .gt-chip-ok {
+    color: var(--success);
+    border-color: color-mix(in oklab, var(--success) 40%, transparent);
+    background: color-mix(in oklab, var(--success) 10%, transparent);
+  }
+  .gt-chip-warn {
+    color: var(--warning);
+    border-color: color-mix(in oklab, var(--warning) 45%, transparent);
+    background: color-mix(in oklab, var(--warning) 10%, transparent);
+    animation: breathe 1.8s ease-in-out infinite;
+  }
+  .gt-orb {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--gt-glass);
+    border: 1px solid var(--gt-edge);
+    box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-hi);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .gt-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    animation: gt-ring 2.6s var(--ease-out) infinite;
+    animation-delay: calc(var(--i, 0) * -1.3s);
+  }
+  .gt-mic {
+    width: 40%;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  /* workflow */
+  .gt-notif {
+    display: flex;
+    align-items: center;
+    gap: 1.2cqw;
+    margin-top: 1cqw;
+    padding: 1cqw 1.2cqw;
+    border-radius: 1.2cqw;
+    border: 1px solid transparent;
+  }
+  .gt-notif-cycle {
+    animation: gt-notif 4.2s var(--ease) infinite;
+    animation-delay: calc(var(--i) * -1.4s);
+  }
+  .gt-check {
+    display: grid;
+    place-items: center;
+    width: 9cqw;
+    height: 9cqw;
+    margin-bottom: 1.6cqw;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--success) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--success) 45%, transparent);
+  }
+  .gt-check svg {
+    width: 55%;
+    fill: none;
+    stroke: var(--success);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .gt-check-sm {
+    width: 5cqw;
+    height: 5cqw;
+    margin: 0;
+  }
+
+  /* retrieval */
+  .gt-caret {
+    display: inline-block;
+    width: 0.8cqw;
+    height: 2cqw;
+    margin-left: 1cqw;
+    margin-top: 1.2cqw;
+    background: var(--accent);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  /* video */
+  .gt-video {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 8.5;
+    border-radius: 1.4cqw;
+    background:
+      radial-gradient(60% 80% at 30% 20%, color-mix(in oklab, var(--accent) 30%, transparent), transparent),
+      linear-gradient(135deg, color-mix(in oklab, var(--foreground) 16%, transparent), color-mix(in oklab, var(--foreground) 4%, transparent));
+  }
+  .gt-play {
+    width: 6cqw;
+    height: 6cqw;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--surface) 85%, transparent);
+    box-shadow: 0 0.6cqw 2cqw color-mix(in oklab, var(--foreground) 20%, transparent);
+  }
+  .gt-play::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 2cqw;
+    height: 2.2cqw;
+    translate: 0.3cqw 0;
+    background: var(--accent);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .gt-progress {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0.38);
+    animation: gt-progress 6s linear infinite;
+  }
+  .gt-gauge {
+    width: 78%;
+    margin: 0 auto;
+    transform: rotate(-90deg);
+  }
+  .gt-gauge-track {
+    fill: none;
+    stroke: var(--gt-ink);
+    stroke-width: 3.5;
+  }
+  .gt-gauge-value {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 94.25;
+    stroke-dashoffset: 22;
+  }
+  [data-theme="dark"] .gt-gauge-value {
+    filter: drop-shadow(0 0 1.5px var(--accent));
+  }
+
+  /* agents pipeline */
+  .gt-kanban {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 4), 1fr);
+    gap: 1.4cqw;
+  }
+  .gt-kanban:has(> .gt-col:nth-child(3):last-of-type),
+  .gt-kanban:not(:has(> .gt-col:nth-child(4))) {
+    --cols: 3;
+  }
+  .gt-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1cqw;
+  }
+  .gt-card {
+    display: block;
+    height: 5.2cqw;
+    border-radius: 1cqw;
+    background: color-mix(in oklab, var(--surface) 72%, transparent);
+    border: 1px solid var(--gt-edge);
+  }
+  .gt-ticket {
+    height: auto;
+    padding: 1cqw;
+  }
+  .gt-card-move {
+    position: absolute;
+    left: 0;
+    top: 2.6cqw;
+    width: calc((100% - 4.2cqw) / 4);
+    border-color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 16%, var(--surface));
+    box-shadow: 0 1cqw 2cqw -1cqw color-mix(in oklab, var(--accent) 60%, transparent);
+    animation: gt-move 6s var(--ease) infinite;
+  }
+  .gt-agents {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+  .gt-avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 8cqw;
+    height: 8cqw;
+    border-radius: 50%;
+    border: 1px solid var(--gt-edge);
+    background: color-mix(in oklab, var(--surface) 80%, transparent);
+    font-family: var(--font-mono);
+    font-size: max(7px, 2.4cqw);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .gt-status {
+    position: absolute;
+    right: -0.2cqw;
+    bottom: -0.2cqw;
+    width: 2.2cqw;
+    height: 2.2cqw;
+    border-radius: 50%;
+    border: 0.4cqw solid var(--surface);
+    background: var(--gt-ink-strong);
+  }
+
+  /* chatbot */
+  .gt-block {
+    display: block;
+    height: 7cqw;
+    border-radius: 1cqw;
+    background: var(--gt-ink);
+  }
+  .gt-block-hero {
+    height: 14cqw;
+    margin-bottom: 1.4cqw;
+    background: linear-gradient(120deg, color-mix(in oklab, var(--accent) 22%, transparent), var(--gt-ink));
+  }
+  .gt-block-photo {
+    height: 13cqw;
+    margin-bottom: 1.4cqw;
+    background:
+      radial-gradient(40% 50% at 70% 30%, color-mix(in oklab, var(--warning) 35%, transparent), transparent),
+      linear-gradient(160deg, color-mix(in oklab, var(--success) 30%, transparent), color-mix(in oklab, var(--accent) 20%, transparent));
+  }
+  .gt-grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1cqw;
+    margin-bottom: 1.6cqw;
+  }
+  .gt-scan {
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 16%;
+    z-index: 2;
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--accent) 20%, transparent));
+    border-bottom: 1px solid var(--accent);
+    transform: translateY(80%);
+    animation: gt-scan 3.4s var(--ease) infinite;
+  }
+  .gt-doc {
+    flex-shrink: 0;
+    width: 2cqw;
+    height: 2.6cqw;
+    border-radius: 0.4cqw;
+    border: 1px solid var(--accent);
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+  }
+  .gt-bubble {
+    width: 78%;
+    padding: 1.4cqw;
+    border-radius: 1.6cqw 1.6cqw 1.6cqw 0.4cqw;
+    background: color-mix(in oklab, var(--surface) 80%, transparent);
+    border: 1px solid var(--gt-edge);
+  }
+  .gt-bubble-me {
+    margin: 1.2cqw 0 0 auto;
+    width: 62%;
+    border-radius: 1.6cqw 1.6cqw 0.4cqw 1.6cqw;
+    border-color: transparent;
+    background: var(--accent);
+  }
+  .gt-bubble-me .gt-line {
+    background: color-mix(in oklab, var(--accent-contrast) 55%, transparent);
+  }
+  .gt-typing {
+    display: flex;
+    gap: 0.7cqw;
+    margin-top: 1.6cqw;
+  }
+  .gt-typing i {
+    width: 1.2cqw;
+    height: 1.2cqw;
+    border-radius: 50%;
+    background: var(--gt-ink-strong);
+    animation: gt-typing 1.2s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -0.2s);
+  }
+
+  /* vision */
+  .gt-pose {
+    width: 62%;
+    margin: 0 auto;
+    animation: gt-bob 3s ease-in-out infinite;
+  }
+  .gt-limb {
+    fill: none;
+    stroke: var(--gt-ink-strong);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .gt-bracket {
+    width: 5cqw;
+    height: 5cqw;
+    border-color: var(--accent);
+    border-style: solid;
+    border-width: 0;
+  }
+  .gt-bracket-tl {
+    left: 1.6cqw;
+    top: 1.6cqw;
+    border-left-width: 2px;
+    border-top-width: 2px;
+  }
+  .gt-bracket-br {
+    right: 1.6cqw;
+    bottom: 1.6cqw;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+  }
+  .gt-meter + .gt-meter {
+    margin-top: 1.2cqw;
+  }
+  .gt-meter .gt-track-full {
+    margin: 1cqw 0 0;
+  }
+  .gt-shield {
+    width: 3.4cqw;
+    fill: color-mix(in oklab, var(--success) 18%, transparent);
+    stroke: var(--success);
+    stroke-width: 1.6;
+  }
+
+  /* map */
+  .gt-map {
+    height: 100%;
+  }
+  .gt-lot {
+    fill: var(--gt-ink);
+  }
+  .gt-road {
+    fill: none;
+    stroke: color-mix(in oklab, var(--surface) 85%, transparent);
+    stroke-width: 2.4;
+  }
+  [data-theme="dark"] .gt-road {
+    stroke: color-mix(in oklab, var(--foreground) 18%, transparent);
+  }
+  .gt-pin {
+    position: absolute;
+    width: 4cqw;
+    height: 4cqw;
+    translate: -50% -100%;
+    border-radius: 50% 50% 50% 0;
+    rotate: -45deg;
+    background: var(--accent);
+    box-shadow: 0 1cqw 2cqw -0.6cqw color-mix(in oklab, var(--accent) 70%, transparent);
+  }
+  .gt-pin::after {
+    content: "";
+    position: absolute;
+    inset: 30%;
+    border-radius: 50%;
+    background: var(--surface);
+  }
+  .gt-pin-pulse {
+    position: absolute;
+    inset: -60%;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    animation: gt-ring 2.4s var(--ease-out) infinite;
+    animation-delay: calc(var(--i) * -0.8s);
+  }
+
+  /* pos */
+  .gt-bill-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4cqw;
+  }
+  .gt-sep {
+    display: block;
+    margin-top: 1.8cqw;
+    border-top: 1px dashed var(--gt-ink-strong);
+  }
+  .gt-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.9cqw;
+    height: 14cqw;
+  }
+  .gt-col-bar {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 0.6cqw 0.6cqw 0.2cqw 0.2cqw;
+    background: var(--gt-ink-strong);
+    transform-origin: bottom;
+  }
+  .gt-col-bar-accent {
+    background: var(--accent);
+  }
+
+  /* ── Case study overlay ── */
+  .cs-overlay {
+    background:
+      radial-gradient(60rem 36rem at 50% -10%, var(--ambient), transparent 70%),
+      var(--background);
+    animation: cs-in 0.5s var(--ease-out) both;
+  }
+  .cs-overlay[data-closing] {
+    animation: cs-out 0.22s var(--ease) both;
+  }
+  .cs-content {
+    animation: fade-up 0.7s var(--ease-out) both;
+  }
+  .cs-hero-thumb {
+    border-radius: 28px;
+    box-shadow: var(--shadow-lift);
+  }
+  .cs-flow-step {
+    position: relative;
+  }
+  .cs-flow-arrow {
+    position: relative;
+    width: 28px;
+    height: 1px;
+    background: var(--border-strong);
+    overflow: hidden;
+  }
+  @media (max-width: 640px) {
+    .cs-flow-arrow {
+      display: none;
+    }
+  }
+  .cs-flow-arrow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 1px;
+    background: var(--accent);
+    animation: cs-travel 1.6s var(--ease) infinite;
+    animation-delay: calc(var(--i, 0) * 0.2s);
+  }
+
+  /* ── Build story: decision timeline and takeaway glow ── */
+  .cs-decisions {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    padding-left: 2.75rem;
+  }
+  .cs-decisions::before {
+    content: "";
+    position: absolute;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.8125rem;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--border-strong) 65%, transparent);
+  }
+  .cs-decision {
+    position: relative;
+  }
+  .cs-decision-node {
+    position: absolute;
+    top: 0;
+    left: -2.75rem;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--background);
+    color: var(--accent);
+    font-size: 11px;
+    box-shadow:
+      0 0 0 5px var(--background),
+      0 0 20px -6px var(--accent);
+  }
+  .cs-lesson-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(30rem 16rem at 100% 0%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 70%);
+  }
+}
+
+/* View transitions stay unlayered so they win over the global root rule. */
+html.vt-case::view-transition-old(root) {
+  animation: 240ms var(--ease) both vt-fade-out;
+}
+html.vt-case::view-transition-new(root) {
+  animation: 380ms var(--ease-out) both vt-fade-in;
+}
+::view-transition-group(case-thumb) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+::view-transition-old(case-thumb),
+::view-transition-new(case-thumb) {
+  height: 100%;
+  object-fit: cover;
+}
+html.vt-case .cs-overlay {
+  animation: none;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes cs-in {
+  from { opacity: 0; transform: scale(0.985); }
+}
+@keyframes cs-out {
+  to { opacity: 0; transform: scale(0.99); }
+}
+@keyframes cs-travel {
+  from { transform: translateX(-12px); }
+  to { transform: translateX(30px); }
+}
+@keyframes gt-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -1.2cqw; }
+}
+@keyframes gt-sheen {
+  0% { transform: translateX(-130%); }
+  45%, 100% { transform: translateX(130%); }
+}
+@keyframes gt-dash {
+  to { stroke-dashoffset: -9; }
+}
+@keyframes gt-pulse {
+  0% { transform: scale(0.5); opacity: 0.9; }
+  80%, 100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes gt-fill {
+  0%, 100% { transform: scaleX(var(--s, 0.5)); }
+  50% { transform: scaleX(1); }
+}
+@keyframes gt-wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.35); }
+}
+@keyframes gt-chip {
+  0%, 30% {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-muted);
+  }
+  36%, 100% {
+    color: var(--muted);
+    border-color: var(--gt-edge);
+    background: color-mix(in oklab, var(--surface) 70%, transparent);
+  }
+}
+@keyframes gt-notif {
+  0%, 30% {
+    border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    background: var(--accent-muted);
+  }
+  36%, 100% {
+    border-color: transparent;
+    background: transparent;
+  }
+}
+@keyframes gt-ring {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  80%, 100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes gt-progress {
+  from { transform: scaleX(0.38); }
+  to { transform: scaleX(1); }
+}
+@keyframes gt-gauge {
+  0%, 100% { stroke-dashoffset: 22; }
+  50% { stroke-dashoffset: 36; }
+}
+@keyframes gt-move {
+  0%, 12% { translate: 0 0; }
+  25%, 37% { translate: calc(100% + 1.4cqw) 0; }
+  50%, 62% { translate: calc(200% + 2.8cqw) 0; }
+  75%, 90% { translate: calc(300% + 4.2cqw) 0; }
+  100% { translate: 0 0; }
+}
+@keyframes gt-status {
+  0%, 18% { background: var(--success); }
+  24%, 100% { background: var(--gt-ink-strong); }
+}
+@keyframes gt-scan {
+  0% { transform: translateY(80%); }
+  100% { transform: translateY(540%); }
+}
+@keyframes gt-typing {
+  0%, 100% { opacity: 0.35; translate: 0 0; }
+  50% { opacity: 1; translate: 0 -0.5cqw; }
+}
+@keyframes gt-bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0.8cqw -0.6cqw; }
+}
+@keyframes gt-grow {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.6); }
+}

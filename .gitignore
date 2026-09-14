@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# tooling caches and headless Chrome leftovers (they also break Tailwind's root scan)
+/node-compile-cache/
+/com.google.Chrome.*
+/scoped_dir*
+
 # debug
 npm-debug.log*
 yarn-debug.log*

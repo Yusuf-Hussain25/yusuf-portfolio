@@ -1,0 +1,295 @@
+/* ───────────────────────── Thumbnail signatures ─────────────────────────
+   "Hot" = a card with [data-hot] (hover / focus on fine pointers, in-view on
+   touch) or a scene with [data-play] (the case-study hero). Every signature
+   animation ends on the resting composition, so leaving never jumps. */
+
+@property --srx { syntax: "<angle>"; inherits: false; initial-value: 13deg; }
+@property --sry { syntax: "<angle>"; inherits: false; initial-value: -17deg; }
+@property --sz { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --ss { syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --zs { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --pm { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --lrx { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@property --vs { syntax: "<integer>"; inherits: false; initial-value: 77; }
+
+@layer components {
+  /* ── Card-level 3D motion, one per card ── */
+  .pc-card[data-hot] .gt-scene[data-motion="separate"] .gt-stage { --zs: 2.4; --sry: -24deg; }
+  .pc-card[data-hot] .gt-scene[data-motion="push"] .gt-stage { --sz: 7cqw; --srx: 6deg; --sry: -9deg; }
+  .pc-card[data-hot] .gt-scene[data-motion="parallax"] .gt-stage { --pm: 1; --ss: 1.03; }
+  .pc-card[data-hot] .gt-scene[data-motion="orbit"] .gt-stage { --srx: 18deg; --sry: 10deg; }
+  .pc-card[data-hot] .gt-scene[data-motion="sweep"] .gt-stage { --ss: 1.035; }
+
+  .gt-sweep {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 38%, color-mix(in oklab, var(--surface) 70%, transparent) 50%, transparent 62%);
+    transform: translateX(-120%);
+  }
+  [data-theme="dark"] .gt-sweep {
+    background: linear-gradient(105deg, transparent 38%, color-mix(in oklab, var(--accent) 20%, transparent) 50%, transparent 62%);
+  }
+  .pc-card[data-hot] .gt-scene[data-motion="sweep"] .gt-sweep {
+    animation: sig-sweep 1.3s var(--ease) both;
+  }
+
+  /* ── repo-graph: edges draw in, nodes pop, graph turns in 3D ── */
+  .rg-persp { perspective: 60cqw; }
+  .rg-graph { transform-origin: 50% 50%; transition: transform 1.1s var(--ease-out); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rg-graph { transform: rotateY(-18deg) rotateX(10deg) scale(1.05); }
+  .rg-edge { stroke-dasharray: 1; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rg-edge {
+    animation: rg-draw 0.9s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 60ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rg-flow {
+    animation: rg-flow-in 1.2s var(--ease) both, gt-dash 1.1s linear infinite;
+  }
+  .rg-node { transform-box: fill-box; transform-origin: center; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rg-node {
+    animation: sig-pop 0.6s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 55ms + 250ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rg-fill {
+    animation: sig-fill 0.9s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 130ms + 650ms);
+  }
+
+  /* ── voice: waveform surges, orb swells, rings pulse ── */
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vo-bar {
+    animation: vo-surge 0.85s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -60ms);
+  }
+  .vo-orb { transition: transform 0.7s var(--ease-out); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vo-orb { transform: scale(1.08); }
+  .vo-glow {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 30%, transparent), transparent);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.6s var(--ease), transform 0.8s var(--ease-out);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vo-glow { opacity: 1; transform: scale(1.1); }
+
+  /* ── workflow: packet runs the pipeline, nodes light in sequence ── */
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .wf-step rect {
+    animation: wf-run-box 2.8s var(--ease) infinite;
+    animation-delay: calc(var(--i) * 0.7s);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .wf-step text {
+    animation: wf-run-text 2.8s var(--ease) infinite;
+    animation-delay: calc(var(--i) * 0.7s);
+  }
+  .wf-packet { fill: var(--accent); opacity: 0; }
+  [data-theme="dark"] .wf-packet { filter: drop-shadow(0 0 1.5px var(--accent)); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .wf-packet { animation: wf-packet 2.8s linear infinite; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .wf-notif {
+    animation: sig-slide-in 0.6s var(--ease-out) both, gt-notif 4.2s var(--ease) infinite;
+    animation-delay: calc(var(--i) * 380ms + 350ms), calc(var(--i) * 1.4s + 1.4s);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .wf-check {
+    animation: sig-pop 0.6s var(--ease-out) 1.5s both;
+  }
+
+  /* ── retrieval: corpus converges on the query, top-k fills, answer types ── */
+  .rt-pt { transition: translate 1.1s var(--ease-out), opacity 0.8s var(--ease); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-pt { translate: var(--dx) var(--dy); opacity: 0.4; }
+  .rt-near { transform-box: fill-box; transform-origin: center; transition: transform 0.6s var(--ease-out) 0.5s; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-near { transform: scale(1.5); }
+  .rt-radius { transform-box: fill-box; transform-origin: center; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-radius { animation: rt-lock 1.1s var(--ease-out) both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-fill {
+    animation: sig-fill 0.9s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 140ms + 450ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-type { animation: sig-type 0.9s steps(12, end) 1s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .rt-type-2 { animation-delay: 1.8s; }
+
+  /* ── video-score: gauge sweeps to a score ── */
+  .vs-gauge { position: relative; }
+  .vs-score {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: max(9px, 5.4cqw);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--foreground);
+    counter-reset: vs var(--vs);
+  }
+  .vs-score::after { content: counter(vs); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vs-score { animation: vs-count 1.4s var(--ease-out) 0.2s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vs-value { animation: vs-sweep 1.4s var(--ease-out) 0.2s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vs-play { animation: vs-ping 1.6s var(--ease-out) infinite; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vs-chip {
+    animation: sig-pop 0.5s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 160ms + 1.1s);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vs-warn {
+    animation: sig-pop 0.5s var(--ease-out) both, breathe 1.8s ease-in-out infinite;
+    animation-delay: 1.42s, 2s;
+  }
+
+  /* ── agents-pipeline: agents come online one by one ── */
+  .ag-status { transition: background-color 0.3s var(--ease); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .ag-avatar {
+    animation: sig-pop 0.55s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .ag-status {
+    animation: ag-online 0.45s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms + 420ms);
+  }
+  [data-theme="dark"] :is(.pc-card[data-hot], .gt-scene[data-play]) .ag-status { box-shadow: 0 0 1.2cqw var(--success); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .ag-proposal { animation: sig-slide-in 0.7s var(--ease-out) 0.75s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .ag-check { animation: sig-pop 0.5s var(--ease-out) 1.25s both; }
+
+  /* ── chatbot: message → typing indicator → reply slides in ── */
+  .cb-slot { position: relative; margin-top: 1.2cqw; }
+  .cb-typing {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 1.6cqw 1.8cqw;
+    border-radius: 1.6cqw 1.6cqw 1.6cqw 0.4cqw;
+    border: 1px solid var(--gt-edge);
+    background: color-mix(in oklab, var(--surface) 80%, transparent);
+    opacity: 0;
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .cb-me { animation: cb-me-in 0.5s var(--ease-out) both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .cb-typing { animation: cb-typing 1.25s var(--ease) 0.35s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .cb-reply { animation: sig-rise 0.6s var(--ease-out) 1.45s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .cb-doc {
+    animation: sig-slide-in 0.5s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 140ms + 150ms);
+  }
+
+  /* ── vision-pose: scan line lights keypoints as it passes ── */
+  .vp-scan { inset: 0; z-index: 2; overflow: hidden; opacity: 0; transition: opacity 0.4s var(--ease); }
+  .vp-scan i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 16%;
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--accent) 22%, transparent));
+    border-bottom: 1px solid var(--accent);
+    transform: translateY(-100%);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vp-scan { opacity: 1; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vp-scan i { animation: vp-scan 2.6s linear infinite; }
+  .vp-joint { transform-box: fill-box; transform-origin: center; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vp-joint {
+    animation: vp-joint 2.6s linear infinite;
+    animation-delay: calc((0.03 + var(--t) * 0.8) / 1.16 * 2.6s);
+  }
+  .gt-bracket { transition: translate 0.7s var(--ease-out); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .gt-bracket-tl { translate: -0.8cqw -0.8cqw; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .gt-bracket-br { translate: 0.8cqw 0.8cqw; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vp-fill {
+    animation: sig-fill 0.9s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 180ms + 350ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .vp-shield { animation: sig-pop 0.5s var(--ease-out) 1s both; }
+
+  /* ── map: map tilts in 3D, pins drop, listing rises ── */
+  .mp-tilt { transform-origin: 50% 80%; transition: --lrx 1s var(--ease-out); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .mp-tilt { --lrx: 26deg; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .mp-pin {
+    animation: mp-drop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(var(--i) * 150ms + 300ms);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .mp-card { animation: sig-rise 0.7s var(--ease-out) 0.95s both; }
+
+  /* ── pos: ticket drops, receipt prints, paid stamps, bars grow ── */
+  .pos-slot {
+    display: block;
+    height: max(2px, 0.6cqw);
+    margin: -0.4cqw 0 0.4cqw;
+    border-radius: 99px;
+    background: var(--gt-ink-strong);
+  }
+  .pos-paid { transform: rotate(-4deg); }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .pos-new { animation: pos-ticket 0.6s var(--ease-out) 0.15s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .pos-receipt { animation: pos-print 1.1s var(--ease-out) 0.2s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .pos-paid { animation: pos-stamp 0.45s cubic-bezier(0.3, 1.6, 0.6, 1) 1.25s both; }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .pos-bar {
+    animation: sig-grow 0.8s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 90ms + 300ms);
+  }
+}
+
+@keyframes sig-sweep { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+@keyframes sig-pop {
+  from { transform: scale(0); opacity: 0; }
+  65% { transform: scale(1.18); opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes sig-fill { from { transform: scaleX(0); } to { transform: scaleX(var(--s, 1)); } }
+@keyframes sig-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes sig-slide-in { from { transform: translate3d(14%, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sig-rise { from { transform: translate3d(0, 24%, 0) scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sig-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes rg-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes rg-flow-in { 0%, 45% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes vo-surge {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1.3); }
+}
+@keyframes wf-run-box {
+  0%, 22% { fill: color-mix(in oklab, var(--accent) 18%, var(--surface)); stroke: var(--accent); }
+  32%, 100% { fill: var(--surface); stroke: var(--gt-ink-strong); }
+}
+@keyframes wf-run-text {
+  0%, 22% { fill: var(--accent); }
+  32%, 100% { fill: var(--muted); }
+}
+@keyframes wf-packet {
+  0% { translate: 15px 0; opacity: 1; }
+  75% { translate: 105px 0; opacity: 1; }
+  88%, 100% { translate: 105px 0; opacity: 0; }
+}
+@keyframes rt-lock { from { transform: scale(2.2); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes vs-count { from { --vs: 0; } to { --vs: 77; } }
+@keyframes vs-sweep { from { stroke-dashoffset: 94.25; } to { stroke-dashoffset: 22; } }
+@keyframes vs-ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent); }
+  100% { box-shadow: 0 0 0 2.6cqw transparent; }
+}
+@keyframes ag-online {
+  from { background-color: var(--gt-ink-strong); transform: scale(0.4); }
+  to { background-color: var(--success); transform: none; }
+}
+@keyframes cb-me-in { from { transform: translate3d(18%, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes cb-typing {
+  0% { opacity: 0; transform: translate3d(0, 20%, 0); }
+  15%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: none; }
+}
+@keyframes vp-scan { from { transform: translateY(-100%); } to { transform: translateY(625%); } }
+@keyframes vp-joint {
+  0% { transform: scale(1); fill: var(--accent); }
+  5% { transform: scale(2.3); fill: var(--success); }
+  18%, 100% { transform: scale(1); fill: var(--accent); }
+}
+@keyframes mp-drop {
+  from { translate: -50% -340%; opacity: 0; }
+  50% { opacity: 1; }
+  to { translate: -50% -100%; opacity: 1; }
+}
+@keyframes pos-ticket { from { transform: translate3d(0, -70%, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes pos-print {
+  from { clip-path: inset(0 0 100% 0); transform: translate3d(0, -12%, 0); }
+  to { clip-path: inset(0 0 0 0); transform: none; }
+}
+@keyframes pos-stamp {
+  from { transform: scale(1.9) rotate(-14deg); opacity: 0; }
+  to { transform: rotate(-4deg); opacity: 1; }
+}

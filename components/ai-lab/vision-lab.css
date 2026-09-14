@@ -1,0 +1,34 @@
+/* Vision AI experiment — scan line + stage details */
+
+.vision-scan {
+  position: absolute;
+  inset-inline: 0;
+  top: -4rem;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--accent) 20%, transparent));
+  border-bottom: 1px solid var(--accent);
+  animation: vision-scan 1.5s var(--ease) infinite;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .vision-scan {
+  box-shadow: 0 8px 22px -8px var(--accent);
+}
+
+.vision-stage-grid {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.vision-thirds {
+  background-image:
+    linear-gradient(90deg, transparent calc(33.333% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(33.333% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(66.666% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px)),
+    linear-gradient(180deg, transparent calc(33.333% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(33.333% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(33.333% + 0.5px), transparent calc(33.333% + 0.5px), transparent calc(66.666% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(66.666% - 0.5px), color-mix(in oklab, var(--foreground) 22%, transparent) calc(66.666% + 0.5px), transparent calc(66.666% + 0.5px));
+}
+
+@keyframes vision-scan {
+  from { top: -4rem; }
+  to { top: 100%; }
+}

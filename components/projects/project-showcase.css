@@ -1,0 +1,274 @@
+/* ───────────────────────── Projects: bento card layouts, scene frame, browser chrome, flow ───────────────────────── */
+
+@layer components {
+  /* ── Card skeleton: media grows, body sizes to content ── */
+  .pc-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .pc-media {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .pc-thumb-fill {
+    flex: 1 1 auto;
+    min-height: clamp(220px, 56vw, 300px);
+  }
+  .pc-body {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  /* ── Stack: one project owns the stage; on tall desktops the cards pile into a deck ── */
+  .pc-stack {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .pc-stack-item {
+    position: relative;
+  }
+  .pc-card[data-layout="stack"] .pc-thumb-fill {
+    min-height: clamp(260px, 62vw, 420px);
+  }
+  .pc-card[data-layout="stack"] .pc-cta {
+    opacity: 1;
+    transform: none;
+  }
+  .pc-num {
+    display: none;
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--border-strong);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @media (min-width: 1024px) {
+    .pc-card[data-layout="stack"] {
+      flex-direction: row;
+      height: 600px;
+    }
+    .pc-card[data-layout="stack"] .pc-media {
+      flex: 1.45 1 0;
+    }
+    .pc-card[data-layout="stack"] .pc-body {
+      flex: 1 1 0;
+    }
+    .pc-card[data-layout="stack"] .pc-thumb-fill {
+      min-height: 0;
+    }
+    .pc-num {
+      display: block;
+    }
+  }
+
+  @media (min-width: 1024px) and (min-height: 680px) {
+    /* the gap is dwell time: each project holds the stage alone before the next arrives */
+    .pc-stack {
+      gap: 55vh;
+    }
+    .pc-stack-item {
+      position: sticky;
+      top: calc(5.5rem + var(--i, 0) * 18px);
+      transform-origin: 50% 0;
+      transform: scale(calc(1 - var(--depth, 0) * 0.045));
+    }
+    .pc-stack-item:last-child {
+      margin-bottom: 12vh;
+    }
+    .pc-stack-item .pc-card[data-layout="stack"] {
+      height: min(620px, calc(100svh - 11rem));
+    }
+    /* covered cards sink into the page */
+    .pc-stack-item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      border-radius: 20px;
+      background: var(--background);
+      opacity: calc(min(var(--depth, 0) * 1.5, 1) * 0.8);
+      pointer-events: none;
+    }
+  }
+
+  /* ── Grid: equal cards, one media ratio, copy aligned across a row ── */
+  .pc-grid .pc-media {
+    flex: none;
+  }
+  .pc-grid .pc-thumb-fill {
+    flex: none;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 16 / 11;
+  }
+  .pc-grid .pc-body {
+    flex: 1 1 auto;
+  }
+
+  /* ── Corner arrow ── */
+  .pc-arrow {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    color: var(--foreground);
+    opacity: 0;
+    transform: translate3d(-6px, 6px, 0) scale(0.9);
+    transition:
+      opacity 0.4s var(--ease-out),
+      transform 0.5s var(--ease-out),
+      color 0.3s var(--ease);
+  }
+  .pc-card[data-hot] .pc-arrow,
+  .pc-card:focus-within .pc-arrow {
+    opacity: 1;
+    transform: none;
+    color: var(--accent);
+  }
+  @media (hover: none) {
+    .pc-arrow {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ── Scene frame: every size draws into a 16:10 frame; "fill" centers it in the parent ── */
+  .gt-frame {
+    position: absolute;
+    inset: 0;
+    perspective: 170cqw;
+    perspective-origin: 50% 35%;
+  }
+  .gt-scene[data-size="fill"] {
+    height: 100%;
+    aspect-ratio: auto;
+    container-type: size;
+  }
+  .gt-scene[data-size="fill"] .gt-frame {
+    inset: 50% auto auto 50%;
+    width: min(100cqw, 160cqh);
+    aspect-ratio: 16 / 10;
+    translate: -50% -50%;
+    container-type: inline-size;
+  }
+
+  /* ── Browser chrome around real screenshots ── */
+  .gt-browser {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 1.8cqw;
+    border: 1px solid var(--gt-edge);
+    background: var(--surface);
+    box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-hi);
+  }
+  .gt-browser-bar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1.6cqw;
+    padding: 1.1cqw 1.6cqw;
+    border-bottom: 1px solid var(--gt-edge);
+    background: var(--surface-sunken);
+  }
+  .gt-browser-bar .gt-dots {
+    margin-bottom: 0;
+  }
+  .gt-url {
+    flex: 1;
+    max-width: 45%;
+    height: max(4px, 1.9cqw);
+    margin-inline: auto;
+    border-radius: 99px;
+    background: var(--gt-ink);
+  }
+  .gt-shot {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── Showcase scene: the mobile build floats in front of the desktop window ── */
+  .sc-phone {
+    overflow: hidden;
+    border-radius: 3cqw;
+    border: 0.7cqw solid #0b0b0d;
+    background: #0b0b0d;
+    box-shadow: var(--gt-shadow);
+    transition: translate 0.9s var(--ease-out);
+  }
+  :is(.pc-card[data-hot], .gt-scene[data-play]) .sc-phone {
+    translate: -2.5cqw -2cqw;
+  }
+
+  /* ── Flow diagram: numbered nodes joined by a signal wire ── */
+  .cs-flow {
+    display: grid;
+    gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .cs-flow {
+      grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+    .cs-flow-long {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .cs-flow-node {
+    position: relative;
+  }
+  .cs-flow-card {
+    height: 100%;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow-panel);
+  }
+  @media (min-width: 768px) {
+    .cs-flow:not(.cs-flow-long) .cs-flow-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 1.5rem;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-strong), var(--accent), var(--border-strong));
+      background-size: 200% 100%;
+      animation: cs-wire 1.8s linear infinite;
+      animation-delay: calc(var(--i, 0) * 0.2s);
+    }
+  }
+}
+
+@keyframes cs-wire {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-arrow {
+    transition: none;
+  }
+  .cs-flow-node::after {
+    animation: none;
+  }
+}

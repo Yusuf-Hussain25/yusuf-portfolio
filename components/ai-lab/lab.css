@@ -1,0 +1,46 @@
+.lab-fade {
+  animation: lab-fade 0.5s var(--ease-out) both;
+}
+
+@keyframes lab-fade {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* inline streaming caret at the end of the last rendered block */
+.rag-answer.is-streaming > div > p:last-child::after,
+.rag-answer.is-streaming > div > :is(ul, ol):last-child > li:last-child > span:last-child::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.16em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+.lab-scroll {
+  scrollbar-width: none;
+}
+.lab-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+[data-theme="dark"] .lab-node-active {
+  filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 45%, transparent));
+}
+
+[data-theme="dark"] .lab-glow {
+  box-shadow: 0 0 14px -2px color-mix(in oklab, var(--accent) 60%, transparent);
+}
+
+.lab-instrument {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--surface-sunken) 55%, transparent), transparent 120px),
+    var(--surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-fade { animation: none; }
+}
