@@ -17,7 +17,7 @@ export const profile = {
   whatsapp: "918789657886",
   links: {
     github: "https://github.com/Yusuf-Hussain25",
-    linkedin: "https://www.linkedin.com/in/yusuf-hussain",
+    linkedin: "https://www.linkedin.com/in/yusuf-hussain-48b2a7209",
   },
 } as const;
 
