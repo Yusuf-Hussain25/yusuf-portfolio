@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   // One English page for every country: no regional targeting.
   alternates: { canonical: "/", languages: { en: "/", "x-default": "/" } },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  // Google Search Console ownership check (HTML tag method).
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION },
   openGraph: {
     title: seo.title,
     description: seo.description,
