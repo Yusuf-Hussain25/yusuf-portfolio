@@ -45,8 +45,8 @@ export const about = {
   title: "AI engineer by craft.",
   subtitle: "Full-stack by habit.",
   paragraphs: [
-    "I'm Yusuf — an AI full-stack engineer. I build LLM products end to end: retrieval, agents, and automation, the APIs and data behind them, and the interfaces people actually use.",
-    "I studied Computer Science at a tier-3 college in Patna — no placement pipeline, no financial cushion — so I taught myself what the syllabus didn't. I was hired as a Full Stack Developer in my final year, moved into AI full-time at Freedom With AI as a project lead, and was named Best Employee of the Year 2026.",
+    "I'm Yusuf Hussain — an AI Engineer and Full Stack Software Engineer at Freedom With AI in Hyderabad. As an AI Developer I build LLM products end to end: RAG, AI agents, and automation. As a Backend Engineer I build the Node.js and Python APIs, PostgreSQL and MongoDB data, and AWS infrastructure behind them — and as a MERN stack developer (MongoDB, Express, React, Node.js), the React and Next.js interfaces people actually use.",
+    "I studied Computer Science at a tier-3 college in Patna — no placement pipeline, no financial cushion — so I taught myself what the syllabus didn't. I was hired as a Full Stack Developer in my final year, moved into AI full-time at Freedom With AI as a project lead, and was named Best Employee of the Year 2026. Today I work from Hyderabad with teams anywhere, and I'm open to remote roles worldwide.",
   ],
 };
 

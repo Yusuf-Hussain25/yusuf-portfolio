@@ -51,7 +51,8 @@ export function Hero() {
           <ArrowRight className="h-3.5 w-3.5 text-subtle transition-transform duration-300 group-hover:translate-x-0.5" />
         </a>
 
-        <h1 className="display mt-8 text-[clamp(5rem,19vw,16.5rem)] leading-[0.8]" aria-label={`${profile.firstName}, ${profile.headline}`}>
+        <h1 className="display mt-8 text-[clamp(5rem,19vw,16.5rem)] leading-[0.8]">
+          <span className="sr-only">{profile.name} — AI Engineer, AI Developer &amp; Full Stack Software Engineer</span>
           <span aria-hidden className="block">
             {profile.firstName.toUpperCase().split("").map((c, i) => (
               <span key={i} className="hero-char" style={{ "--i": i } as React.CSSProperties}>

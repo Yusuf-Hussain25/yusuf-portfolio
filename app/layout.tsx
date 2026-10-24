@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { InlineScript } from "@/components/ui/inline-script";
+import { profile } from "@/lib/content/profile";
+import { personJsonLd, seo, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,13 +16,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Yusuf Hussain — AI Engineer",
-  description:
-    "Enter Yusuf's AI Lab: a grounded portfolio assistant, a live RAG explorer, agent orchestration, vision, and evaluation experiments.",
+  metadataBase: new URL(siteUrl),
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  authors: [{ name: profile.name, url: siteUrl }],
+  creator: profile.name,
+  // One English page for every country: no regional targeting.
+  alternates: { canonical: "/", languages: { en: "/", "x-default": "/" } },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   openGraph: {
-    title: "Yusuf Hussain — AI Engineer",
-    description: "An AI product that happens to be a portfolio.",
-    type: "website",
+    title: seo.title,
+    description: seo.description,
+    url: "/",
+    siteName: profile.name,
+    type: "profile",
+    locale: "en_US",
+    alternateLocale: ["en_IN", "en_GB"],
+    images: [{ url: "/images/yusuf-portrait.jpg", alt: `${profile.name}, AI Engineer and Full Stack Software Engineer` }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: seo.title,
+    description: seo.description,
+    images: ["/images/yusuf-portrait.jpg"],
   },
 };
 
@@ -45,6 +64,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <InlineScript html={themeScript} />
       </head>
       <body className="min-h-dvh">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
+        />
         <div aria-hidden className="ambient" />
         {children}
       </body>
