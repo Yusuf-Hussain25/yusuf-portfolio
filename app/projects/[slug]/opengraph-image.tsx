@@ -1,13 +1,19 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { getEntry, imageOf, labelOf, trackOf } from "@/lib/content/catalog";
+import { entries, getEntry, imageOf, labelOf, trackOf } from "@/lib/content/catalog";
 import { profile } from "@/lib/content/profile";
 
 // Share card for each project: title, tagline and the real screenshot. Built at build time.
 export const alt = `Project by ${profile.name}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+// Render every card at build time (reading /public at request time doesn't work in a serverless function).
+export const dynamicParams = false;
+export function generateStaticParams() {
+  return entries.map((e) => ({ slug: e.slug }));
+}
 
 /** Satori can't read WebP, so WebP covers have JPEG copies in /images/og/<slug>.jpg. */
 async function cover(slug: string, image: string | null) {
