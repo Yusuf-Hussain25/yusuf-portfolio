@@ -33,8 +33,9 @@ export function About({ asPage = false }: { asPage?: boolean }) {
 
       <div className="relative mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
         {/* ── Intro: portrait + who I am ── */}
-        <div className="grid gap-16 lg:grid-cols-12 lg:items-center lg:gap-16">
-          <div className="relative mx-auto w-full max-w-[720px] lg:col-span-7 lg:max-w-none">
+        <div className="grid gap-16 lg:grid-cols-12 lg:items-start lg:gap-16">
+          {/* photo starts level with the heading and stays in view while the bio scrolls */}
+          <div className="relative mx-auto w-full max-w-[720px] lg:sticky lg:top-28 lg:col-span-7 lg:mt-12 lg:max-w-none">
             <figure data-reveal className="ab-portrait group">
               <div className="ab-portrait-frame">
                 <Image
@@ -80,11 +81,11 @@ export function About({ asPage = false }: { asPage?: boolean }) {
 
             <dl data-reveal style={delay(220)} className="mt-9 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
               {stats.map((s) => (
-                <div key={s.label} className="panel spotlight flex flex-col-reverse px-4 py-3.5">
-                  <dt className="mt-1.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-subtle">{s.label}</dt>
-                  <dd className="text-[1.6rem] font-semibold leading-none tracking-tight sm:text-3xl">
+                <div key={s.label} className="panel spotlight flex min-w-0 flex-col-reverse px-3 py-3.5 sm:px-4">
+                  <dt className="mt-1.5 font-mono text-[10px] uppercase leading-snug tracking-[0.06em] text-subtle [overflow-wrap:anywhere] sm:text-[10.5px] sm:tracking-[0.1em]">{s.label}</dt>
+                  <dd className="whitespace-nowrap text-[1.4rem] font-semibold leading-none tracking-tight sm:text-3xl">
                     {s.value}
-                    {s.suffix && <span className="text-base text-subtle">{s.suffix}</span>}
+                    {s.suffix && <span className="text-sm text-subtle sm:text-base">{s.suffix}</span>}
                   </dd>
                 </div>
               ))}

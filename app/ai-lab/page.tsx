@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function Page() {
   return (
-    <div className="pt-16 md:pt-20">
+    <div>
       <JsonLd data={breadcrumbJsonLd([{ name: "AI Lab", path: "/ai-lab" }])} />
       <AskYusuf asPage />
       <AILab />
