@@ -231,12 +231,13 @@ function CareerMove() {
 }
 
 /** `flush`: sits right under the hero, which already fades out, so no divider line. */
-export function Experience({ index = "02", flush = false }: { index?: string; flush?: boolean }) {
+export function Experience({ index = "02", flush = false, asPage = false }: { index?: string; flush?: boolean; asPage?: boolean }) {
   const timeline = useRef<HTMLOListElement>(null);
   return (
     <section id="experience" className={`relative ${flush ? "" : "border-t border-line"}`}>
       <div className={`mx-auto max-w-7xl px-5 md:px-8 ${flush ? "pb-28 pt-20 md:pb-36 md:pt-24" : "py-28 md:py-36"}`}>
         <SectionHeading
+          as={asPage ? "h1" : "h2"}
           index={index}
           eyebrow="Experience"
           title={

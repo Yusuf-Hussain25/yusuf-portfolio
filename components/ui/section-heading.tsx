@@ -7,6 +7,7 @@ export function SectionHeading({
   children,
   align = "left",
   eager = false,
+  as: Heading = "h2",
 }: {
   index: string;
   eyebrow: string;
@@ -15,6 +16,8 @@ export function SectionHeading({
   align?: "left" | "center";
   /** Fade in on page load instead of on scroll (for headings right under the hero). */
   eager?: boolean;
+  /** "h1" when the section is the page itself (one H1 per page for SEO). */
+  as?: "h1" | "h2";
 }) {
   const center = align === "center";
   // Scroll reveal by default; "fade-up" plays on load.
@@ -32,9 +35,9 @@ export function SectionHeading({
         <span className="h-px w-8 bg-line-strong" aria-hidden />
         <span>{eyebrow}</span>
       </div>
-      <h2 {...titleAnim} className={`${titleAnim.className} display mt-5 text-[clamp(2.5rem,6.5vw,5.25rem)]`}>
+      <Heading {...titleAnim} className={`${titleAnim.className} display mt-5 text-[clamp(2.5rem,6.5vw,5.25rem)]`}>
         {title}
-      </h2>
+      </Heading>
       {children && (
         <p {...bodyAnim} className={`${bodyAnim.className} mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty ${center ? "mx-auto" : ""}`}>
           {children}

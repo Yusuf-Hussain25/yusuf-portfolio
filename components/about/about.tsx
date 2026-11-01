@@ -23,7 +23,8 @@ const stats = [
 const taglineIcons: GlyphKind[] = ["college", "laptop", "ship"];
 const taglineParts = story.tagline.replace(/\.$/, "").split(", ");
 
-export function About() {
+export function About({ asPage = false }: { asPage?: boolean }) {
+  const Heading = asPage ? "h1" : "h2";
   const lastChapter = story.chapters.length - 1;
   return (
     <section id="about" className="relative overflow-hidden border-t border-line">
@@ -68,9 +69,9 @@ export function About() {
               <span className="h-px w-8 bg-line-strong" aria-hidden />
               <span>About</span>
             </div>
-            <h2 data-reveal style={delay(80)} className="display mt-5 text-[clamp(2.5rem,4.2vw,3.6rem)]">
+            <Heading data-reveal style={delay(80)} className="display mt-5 text-[clamp(2.5rem,4.2vw,3.6rem)]">
               {about.title} <span className="text-subtle">{about.subtitle}</span>
-            </h2>
+            </Heading>
             <div data-reveal style={delay(160)} className="mt-7 max-w-2xl space-y-4 text-[16.5px] leading-relaxed text-muted">
               {about.paragraphs.map((p) => (
                 <p key={p}>{p}</p>

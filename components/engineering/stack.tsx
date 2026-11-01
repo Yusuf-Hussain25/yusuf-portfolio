@@ -66,7 +66,7 @@ function Detail({ layer, tech, index }: { layer: StackLayer; tech: StackTech; in
   );
 }
 
-export function Engineering() {
+export function Engineering({ asPage = false }: { asPage?: boolean }) {
   const [selected, setSelected] = useState({ layer: "intelligence", tech: "RAG" });
   const [hoverGroup, setHoverGroup] = useState<string | null>(null);
   const [pinnedGroup, setPinnedGroup] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export function Engineering() {
   return (
     <section id="system" className="relative border-t border-line">
       <div className="mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
-        <SectionHeading index="03" eyebrow="Skills · How I build" title="How I build">
+        <SectionHeading as={asPage ? "h1" : "h2"} index="03" eyebrow="Skills · How I build" title="How I build">
           Not a list of logos — a system. Each layer calls the one below it. Select a component to see where it runs in real work.
         </SectionHeading>
 

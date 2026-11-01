@@ -30,6 +30,7 @@ export const yearOf = (e: Entry): string | null => (e.kind === "client" ? null :
 export const labelOf = (e: Entry): string => {
   if (e.kind === "client") return e.data.category;
   if (e.kind === "build") return e.data.area === "AI" ? "AI product" : "Full-stack product";
+  if (e.data.kind === "Professional work") return "AI automation";
   return e.data.kind === "Project" ? "AI project" : e.data.kind;
 };
 

@@ -16,7 +16,8 @@ const links = [
   { label: "GitHub", href: profile.links.github, sub: handle(profile.links.github), icon: <Github /> },
 ];
 
-export function Contact() {
+export function Contact({ asPage = false }: { asPage?: boolean }) {
+  const Heading = asPage ? "h1" : "h2";
   return (
     <section id="contact" className="relative overflow-hidden border-t border-line">
       <div aria-hidden className="bg-grid grid-fade absolute inset-0 opacity-60" />
@@ -33,9 +34,9 @@ export function Contact() {
             <span className="status-dot" aria-hidden />
             Available for AI engineering roles
           </div>
-          <h2 data-reveal style={delay(80)} className="display mt-6 text-[clamp(3rem,7.4vw,6.5rem)]">
+          <Heading data-reveal style={delay(80)} className="display mt-6 text-[clamp(3rem,7.4vw,6.5rem)]">
             Let&apos;s build something <span className="accent-text">intelligent.</span>
-          </h2>
+          </Heading>
           <p data-reveal style={delay(160)} className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
             I&apos;m interested in building useful products at the intersection of software engineering and AI.
           </p>

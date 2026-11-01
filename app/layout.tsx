@@ -6,7 +6,7 @@ import { ContactFab } from "@/components/ui/contact-fab";
 import { InlineScript } from "@/components/ui/inline-script";
 import { Interactions } from "@/components/ui/interactions";
 import { profile } from "@/lib/content/profile";
-import { personJsonLd, seo, siteUrl } from "@/lib/seo";
+import { defaultOgImage, personJsonLd, seo, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: "profile",
     locale: "en_US",
     alternateLocale: ["en_IN", "en_GB"],
-    images: [{ url: "/images/yusuf-portrait.jpg", alt: `${profile.name}, AI Engineer and Full Stack Software Engineer` }],
+    images: [defaultOgImage],
   },
   twitter: {
     card: "summary_large_image",
