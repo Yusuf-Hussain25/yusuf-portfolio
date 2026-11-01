@@ -60,7 +60,7 @@ export function AILab() {
       <div aria-hidden className="bg-grid grid-fade absolute inset-0 opacity-90" />
       <div className="relative mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
         <SectionHeading
-          index="07"
+          index="05.B"
           eyebrow="AI Lab"
           title={
             <>

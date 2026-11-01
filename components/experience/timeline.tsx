@@ -65,9 +65,10 @@ function Highlights() {
 }
 
 /** Sticky identity column: who, when, proof — and a progress meter synced to the contributions. */
-function Identity({ company: c, index, active }: { company: Company; index: number; active: number }) {
+function Identity({ company: c, index, active, onJump }: { company: Company; index: number; active: number; onJump: (i: number) => void }) {
   const now = c.status === "now";
-  const current = c.contributions[active];
+  // The award card already says it; don't repeat it as a metric row.
+  const impact = c.award ? c.impact.filter((m) => !/employee/i.test(`${m.value} ${m.label}`)) : c.impact;
   return (
     <div className="exp-sticky">
       <div className="flex items-center justify-between gap-3">
@@ -113,7 +114,7 @@ function Identity({ company: c, index, active }: { company: Company; index: numb
       )}
 
       <dl className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line">
-        {c.impact.map((m) => (
+        {impact.map((m) => (
           <div key={m.label} className="flex items-baseline justify-between gap-4 bg-surface px-4 py-3">
             <dt className="text-[13px] text-muted">{m.label}</dt>
             <dd className={`whitespace-nowrap font-semibold tracking-tight ${now ? "text-accent" : "text-foreground"}`}>{m.value}</dd>
@@ -121,22 +122,30 @@ function Identity({ company: c, index, active }: { company: Company; index: numb
         ))}
       </dl>
 
-      <div aria-hidden className="mt-7 hidden lg:block">
+      <nav aria-label={`${c.org} contributions`} className="mt-7 hidden lg:block">
         <div className="flex items-center justify-between font-mono text-[10.5px] uppercase tracking-[0.12em] text-subtle">
-          <span>Reading</span>
+          <span>Key contributions</span>
           <span className="tabular-nums">
             <span className="text-accent">{pad(active + 1)}</span> / {pad(c.contributions.length)}
           </span>
         </div>
-        <div className="exp-progress mt-2.5">
+        <ol className="mt-2.5 grid gap-0.5 border-l border-line pl-2">
           {c.contributions.map((k, i) => (
-            <span key={k.title} data-on={i <= active} />
+            <li key={k.title}>
+              <button
+                type="button"
+                onClick={() => onJump(i)}
+                aria-current={i === active ? "step" : undefined}
+                data-on={i === active}
+                className="exp-toc group flex w-full items-start gap-3 rounded-xl px-2.5 py-1.5 text-left"
+              >
+                <span className="pt-px font-mono text-[11px] tabular-nums">{pad(i + 1)}</span>
+                <span className="line-clamp-1 text-[13px] leading-snug">{k.title}</span>
+              </button>
+            </li>
           ))}
-        </div>
-        <div key={current.title} className="exp-reading mt-2.5 line-clamp-2 text-[13px] leading-snug text-muted">
-          {current.title}
-        </div>
-      </div>
+        </ol>
+      </nav>
     </div>
   );
 }
@@ -144,6 +153,7 @@ function Identity({ company: c, index, active }: { company: Company; index: numb
 function Chapter({ company: c, index }: { company: Company; index: number }) {
   const now = c.status === "now";
   const { ref, active } = useActiveRow();
+  const jump = (i: number) => (ref.current?.children[i] as HTMLElement | undefined)?.scrollIntoView({ behavior: "smooth", block: "center" });
   return (
     <li className="relative" aria-labelledby={`exp-${c.id}`}>
       <span aria-hidden className="exp-node" />
@@ -151,7 +161,7 @@ function Chapter({ company: c, index }: { company: Company; index: number }) {
         {now && <span aria-hidden className="exp-now-edge absolute inset-x-10 top-0 h-px" />}
         <div className="grid lg:grid-cols-12">
           <aside className="border-b border-line p-6 md:p-8 lg:col-span-5 lg:border-b-0 lg:border-r xl:col-span-4">
-            <Identity company={c} index={index} active={active} />
+            <Identity company={c} index={index} active={active} onJump={jump} />
           </aside>
 
           <div className="exp-story lg:col-span-7 xl:col-span-8">
@@ -220,13 +230,14 @@ function CareerMove() {
   );
 }
 
-export function Experience() {
+/** `flush`: sits right under the hero, which already fades out, so no divider line. */
+export function Experience({ index = "02", flush = false }: { index?: string; flush?: boolean }) {
   const timeline = useRef<HTMLOListElement>(null);
   return (
-    <section id="experience" className="relative border-t border-line">
-      <div className="mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
+    <section id="experience" className={`relative ${flush ? "" : "border-t border-line"}`}>
+      <div className={`mx-auto max-w-7xl px-5 md:px-8 ${flush ? "pb-28 pt-20 md:pb-36 md:pt-24" : "py-28 md:py-36"}`}>
         <SectionHeading
-          index="02"
+          index={index}
           eyebrow="Experience"
           title={
             <>

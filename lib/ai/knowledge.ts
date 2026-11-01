@@ -1,4 +1,5 @@
 import { achievements, award, profile, skillGroups, story, timeline } from "@/lib/content/profile";
+import { builds } from "@/lib/content/builds";
 import { caseStudies } from "@/lib/content/projects";
 import { createIndex, type Chunk, type VectorIndex } from "./retrieval";
 
@@ -54,6 +55,27 @@ function buildChunks(): Chunk[] {
       title: `${cs.title} — why and how it was built`,
       source: "Project",
       text: `${cs.story.spark} Key decisions: ${cs.story.decisions.map((d) => `${d.choice} — ${d.why}`).join(" ")} Hardest part: ${cs.story.hardest} Takeaway: ${cs.story.learned}`,
+    });
+  }
+
+  for (const b of builds) {
+    chunks.push({
+      id: `${b.slug}-overview`,
+      title: b.title,
+      source: "Project",
+      text: `${b.title} (personal ${b.area === "AI" ? "AI" : "full-stack"} project, ${b.year}): ${b.tagline} ${b.summary} Stack: ${b.stack.join(", ")}.${b.liveUrl ? ` Live at ${b.liveUrl}.` : ""}`,
+    });
+    chunks.push({
+      id: `${b.slug}-story`,
+      title: `${b.title} — why and how it was built`,
+      source: "Project",
+      text: `${b.story.spark} Key decisions: ${b.story.decisions.map((d) => `${d.choice} — ${d.why}`).join(" ")} Hardest part: ${b.story.hardest} Takeaway: ${b.story.learned}`,
+    });
+    chunks.push({
+      id: `${b.slug}-engineering`,
+      title: `${b.title} — engineering`,
+      source: "Project",
+      text: `${b.origin ? `${b.origin} ` : ""}${b.engineering.map((e) => `${e.title}: ${e.detail}`).join(" ")}`,
     });
   }
 

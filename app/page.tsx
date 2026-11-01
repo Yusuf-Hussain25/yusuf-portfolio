@@ -1,32 +1,18 @@
-import { About } from "@/components/about/about";
-import { AILab } from "@/components/ai-lab/ai-lab";
-import { AskYusuf } from "@/components/ask-yusuf/ask-yusuf";
 import { Contact } from "@/components/contact/contact";
-import { Engineering } from "@/components/engineering/stack";
 import { Experience } from "@/components/experience/timeline";
 import { Hero } from "@/components/hero/hero";
-import { Nav } from "@/components/navigation/nav";
-import { Projects } from "@/components/projects/projects";
-import { ContactFab } from "@/components/ui/contact-fab";
-import { Interactions } from "@/components/ui/interactions";
+import { Explore } from "@/components/home/explore";
+import { Featured } from "@/components/projects/featured";
 
-// Recruiter-first order: who → where I worked → what I built → skills → about → ask → interactive demos.
+// Home is a front door: who I am, where I've worked, the best work, then one link per page.
 export default function Home() {
   return (
     <>
-      <Nav />
-      <main>
-        <Hero />
-        <Experience />
-        <Projects />
-        <Engineering />
-        <About />
-        <AskYusuf />
-        <AILab />
-        <Contact />
-      </main>
-      <ContactFab />
-      <Interactions />
+      <Hero />
+      <Experience index="01" flush />
+      <Featured />
+      <Explore />
+      <Contact />
     </>
   );
 }

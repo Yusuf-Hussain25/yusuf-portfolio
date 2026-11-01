@@ -159,7 +159,7 @@ export function AskYusuf() {
     <section id="ask" className="relative border-t border-line">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(50%_60%_at_50%_0%,var(--ambient),transparent)]" />
       <div className="relative mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
-        <SectionHeading index="06" eyebrow="Ask Yusuf" title="Ask Yusuf">
+        <SectionHeading index="05" eyebrow="Ask Yusuf" title="Ask Yusuf">
           Ask anything about my experience, projects, skills, and engineering work.
         </SectionHeading>
 

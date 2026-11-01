@@ -1,5 +1,6 @@
 import { achievements, award, profile, skillGroups, story, timeline } from "@/lib/content/profile";
-import { caseStudies } from "@/lib/content/projects";
+import { builds } from "@/lib/content/builds";
+import { caseStudies, clientProjects } from "@/lib/content/projects";
 import type { Hit } from "./retrieval";
 
 // Local, grounded answer composer used when no LLM key is configured.
@@ -97,7 +98,7 @@ const intents: Intent[] = [
   {
     test: /project|built|build|portfolio|made|created|shipped/,
     answer: () =>
-      `Here's what's in the portfolio:\n\n${caseStudies.map((c) => `- **${c.title}** (${c.kind.toLowerCase()}, ${c.year}) — ${c.tagline}`).join("\n")}`,
+      `Here's what's in the portfolio:\n\n**Personal projects**\n${builds.map((b) => `- **${b.title}** (${b.year}) — ${b.tagline}`).join("\n")}\n${caseStudies.filter((c) => c.kind !== "Professional work").map((c) => `- **${c.title}** (${c.year}) — ${c.tagline}`).join("\n")}\n\n**Professional work**\n${caseStudies.filter((c) => c.kind === "Professional work").map((c) => `- **${c.title}** — ${c.tagline}`).join("\n")}\n- Client products: ${clientProjects.map((c) => c.title).join(", ")}\n\nEvery project has its own page under /projects.`,
   },
   {
     test: /^(hi|hello|hey|yo|hola|namaste)\b|who (is|are)|about (him|yusuf)|introduce|summary|overview/,

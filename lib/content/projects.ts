@@ -62,6 +62,8 @@ export type CaseStudy = {
   result: string | null;
   resultPlaceholder?: string;
   links: { label: string; href: string | null }[];
+  /** Screenshot of the live product, if there is one. */
+  image?: string;
   architecture: { nodes: ArchNode[]; edges: ArchEdge[] };
 };
 
@@ -122,9 +124,10 @@ export const caseStudies: CaseStudy[] = [
     result: null,
     resultPlaceholder: "Add outcome — demo link, repositories analyzed, or evaluation results.",
     links: [
-      { label: "Source", href: null },
-      { label: "Live demo", href: null },
+      { label: "Source", href: "https://github.com/Yusuf-Hussain25/repomind" },
+      { label: "Live demo", href: "https://repomind.yusufhussain.in" },
     ],
+    image: "/images/projects/repomind/home.webp",
     architecture: {
       nodes: [
         { id: "repo", label: "GitHub repo", sub: "input", x: 90, y: 70, kind: "io" },

@@ -63,10 +63,10 @@
 }
 
 /* identity column follows the story only when it fits the viewport */
-@media (min-width: 1024px) and (min-height: 760px) {
+@media (min-width: 1024px) and (min-height: 680px) {
   .exp-sticky {
     position: sticky;
-    top: 7rem;
+    top: 6rem;
   }
 }
 
@@ -136,8 +136,21 @@
 [data-theme="dark"] .exp-progress span[data-on="true"] {
   box-shadow: 0 0 8px -1px var(--accent);
 }
-.exp-reading {
-  animation: fade-up 0.45s var(--ease-out) both;
+/* contributions index in the sticky column; the row in view is lit */
+.exp-toc {
+  color: var(--subtle);
+  transition: color 0.3s var(--ease), background-color 0.3s var(--ease);
+}
+.exp-toc:hover {
+  color: var(--foreground);
+  background: var(--surface-sunken);
+}
+.exp-toc[data-on="true"] {
+  color: var(--foreground);
+  background: var(--accent-muted);
+}
+.exp-toc[data-on="true"] > span:first-child {
+  color: var(--accent);
 }
 
 /* ── Contributions: the row in view gets the accent bar along the column divider ── */

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
+import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/ui/icons";
-import type { Entry } from "./case-study-overlay";
+import { factsOf, hrefOf, imageOf, labelOf, liveUrlOf, phoneOf, thumbOf, trackOf, yearOf, type Entry } from "@/lib/content/catalog";
 import { GlassThumb } from "./thumbnails";
 
 export type CardLayout = "stack" | "tall";
@@ -89,37 +90,44 @@ export function ProjectCard({
   layout,
   className = "",
   delay = 0,
-  onOpen,
-  registerThumb,
+  reveal = true,
 }: {
   entry: Entry;
   layout: CardLayout;
   className?: string;
   delay?: number;
-  onOpen: (slug: string) => void;
-  registerThumb: (slug: string, el: HTMLElement | null) => void;
+  /** false = fade in on load instead of on scroll (for cards above the fold). */
+  reveal?: boolean;
 }) {
   const ref = useCardMotion<HTMLElement>();
-  const eyebrow = entry.kind === "case" ? [entry.data.index, entry.data.kind, entry.data.year] : [entry.data.category];
-  const facts = entry.kind === "case" ? entry.data.facts : entry.data.features.slice(0, 3);
-  const image = entry.kind === "client" ? entry.data.image : null;
-  const live = entry.kind === "client" && Boolean(entry.data.liveUrl);
+  const year = yearOf(entry);
+  const eyebrow = [labelOf(entry), ...(year ? [year] : [])];
+  const facts = factsOf(entry);
+  const image = imageOf(entry);
+  const phone = phoneOf(entry);
+  const liveUrl = liveUrlOf(entry);
+  const live = Boolean(liveUrl);
+  const thumb = thumbOf(entry);
   const stacked = layout === "stack";
   const titleSize = stacked ? "text-3xl md:text-[2.75rem] lg:text-5xl" : "text-xl md:text-2xl";
+  const professional = trackOf(entry) === "professional";
 
   return (
-    <div data-reveal style={{ "--d": `${delay}ms` } as CSSProperties} className={`h-full ${className}`}>
+    <div data-reveal={reveal ? "" : undefined} style={{ "--d": `${delay}ms` } as CSSProperties} className={`h-full ${reveal ? "" : "fade-up"} ${className}`}>
       <article ref={ref} data-layout={layout} className="pc-card panel spotlight hue group" style={{ "--hue": entry.data.hue } as CSSProperties}>
         <div className="pc-media relative p-2">
-          <div ref={(el) => registerThumb(entry.slug, el)} className="pc-thumb pc-thumb-fill">
-            <GlassThumb variant={entry.data.thumb} image={image} phone={entry.kind === "client" ? entry.data.phone : null} size="fill" />
+          <div className="pc-thumb pc-thumb-fill">
+            <GlassThumb variant={thumb} image={image} phone={phone} size="fill" />
           </div>
-          {live && (
-            <span className="chip glass pointer-events-none absolute left-4 top-4 gap-2">
-              <span className="status-dot scale-75" aria-hidden />
-              Live product
-            </span>
-          )}
+          <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap gap-1.5">
+            <span className="chip glass gap-2">{professional ? "Professional" : "Personal"}</span>
+            {live && (
+              <span className="chip glass gap-2">
+                <span className="status-dot scale-75" aria-hidden />
+                Live
+              </span>
+            )}
+          </div>
           <span className="pc-arrow glass" aria-hidden>
             <ArrowUpRight />
           </span>
@@ -133,28 +141,22 @@ export function ProjectCard({
         </div>
 
         <div className={`pc-body flex flex-col p-5 md:p-7 ${stacked ? "lg:px-11 lg:py-10" : ""}`}>
-          {stacked && entry.kind === "case" && (
-            <span className="pc-num" aria-hidden>
-              {entry.data.index}
-            </span>
-          )}
           <div className="eyebrow flex flex-wrap items-center gap-2">
             {eyebrow.map((part, i) => (
-              <span key={part} className={i === 0 && entry.kind === "case" ? "text-accent" : ""}>
+              <span key={part} className={i === 0 ? "text-accent" : ""}>
                 {i > 0 && <span className="mr-2" aria-hidden>·</span>}
                 {part}
               </span>
             ))}
           </div>
           <h3 className={`${stacked ? "mt-5 lg:mt-auto" : "mt-4"} font-semibold tracking-[-0.03em] text-foreground text-balance ${titleSize}`}>
-            <button
-              type="button"
-              onClick={() => onOpen(entry.slug)}
-              aria-label={`View case study: ${entry.title}`}
+            <Link
+              href={hrefOf(entry)}
+              aria-label={`View project: ${entry.title}`}
               className="pc-open text-left after:absolute after:inset-0 after:z-10 after:content-['']"
             >
               {entry.title}
-            </button>
+            </Link>
           </h3>
           <p className={`mt-3 leading-relaxed text-muted text-pretty ${layout === "tall" ? "text-[15px]" : "md:text-lg"}`}>{entry.data.tagline}</p>
           {layout !== "tall" && (
@@ -167,10 +169,22 @@ export function ProjectCard({
               ))}
             </ul>
           )}
-          <div className="mt-auto pt-7">
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-7">
             <span className="pc-cta inline-flex items-center gap-2 text-sm font-medium">
-              View case study <ArrowRight />
+              View project <ArrowRight />
             </span>
+            {liveUrl && (
+              // Sits above the card-wide link, so it opens the live app directly
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open the live ${entry.title} in a new tab`}
+                className="btn btn-primary relative z-20 h-9 px-4 text-[13px]"
+              >
+                Live demo <ArrowUpRight />
+              </a>
+            )}
           </div>
         </div>
       </article>

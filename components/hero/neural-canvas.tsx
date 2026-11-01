@@ -117,6 +117,8 @@ export function NeuralCanvas({ className = "" }: { className?: string }) {
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
+      // Hidden (e.g. the home page kept in the background after navigating away): nothing to size.
+      if (rect.width === 0 || rect.height === 0) return;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = rect.width;
       h = rect.height;
@@ -125,6 +127,7 @@ export function NeuralCanvas({ className = "" }: { className?: string }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       graph = build(w, h);
       if (reduced) draw(0);
+      else start();
     };
 
     const onPointer = (e: PointerEvent) => {
@@ -142,9 +145,11 @@ export function NeuralCanvas({ className = "" }: { className?: string }) {
       ctx.fill();
     };
 
-    function draw(time: number) {
+    /** Returns false when there is nothing to draw (canvas hidden or not sized yet). */
+    function draw(time: number): boolean {
       const { nodes, edges, particles, mobile, core } = graph;
       const rect = canvas!.getBoundingClientRect();
+      if (rect.height === 0 || w === 0 || h === 0) return false;
       const p = Math.min(1, Math.max(0, -rect.top / (rect.height * 0.85)));
       const e = p * p * (3 - 2 * p); // smoothstep
       const cx = w * (mobile ? 0.5 : 0.66);
@@ -394,12 +399,14 @@ export function NeuralCanvas({ className = "" }: { className?: string }) {
           dot(x, y, n.r + nearN, `rgba(${nearN > 0.1 ? palette.accent : palette.node},${(0.28 + nearN * 0.5) * fade})`);
         }
       }
+      return true;
     }
 
     const loop = (time: number) => {
       raf = 0;
       if (!visible || document.hidden) return;
-      draw(time);
+      // Stop while hidden; the ResizeObserver restarts the loop when the canvas has a size again.
+      if (!draw(time)) return;
       raf = requestAnimationFrame(loop);
     };
     const start = () => {

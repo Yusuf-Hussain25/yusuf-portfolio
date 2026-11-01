@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Footer } from "@/components/navigation/footer";
+import { Nav } from "@/components/navigation/nav";
+import { ContactFab } from "@/components/ui/contact-fab";
 import { InlineScript } from "@/components/ui/inline-script";
+import { Interactions } from "@/components/ui/interactions";
 import { profile } from "@/lib/content/profile";
 import { personJsonLd, seo, siteUrl } from "@/lib/seo";
 import "./globals.css";
@@ -17,7 +21,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: seo.title,
+  title: { default: seo.title, template: `%s · ${profile.name}` },
   description: seo.description,
   keywords: seo.keywords,
   authors: [{ name: profile.name, url: siteUrl }],
@@ -71,7 +75,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
         />
         <div aria-hidden className="ambient" />
-        {children}
+        <Nav />
+        <main>{children}</main>
+        <Footer />
+        <ContactFab />
+        <Interactions />
       </body>
     </html>
   );

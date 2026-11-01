@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Fragment, useRef, useState } from "react";
 import { skillGroups } from "@/lib/content/profile";
 import { caseStudies } from "@/lib/content/projects";
@@ -19,11 +20,6 @@ function splitNote(item: string) {
 const tools = skillGroups.flatMap((g) => g.items.map((item) => ({ ...splitNote(item), group: g.group, key: item })));
 const perRow = Math.ceil(tools.length / 3);
 const toolkitRows = [0, 1, 2].map((r) => tools.slice(r * perRow, (r + 1) * perRow));
-
-function openCaseStudy(slug: string) {
-  document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-  window.dispatchEvent(new CustomEvent("open-case-study", { detail: slug }));
-}
 
 function Detail({ layer, tech, index }: { layer: StackLayer; tech: StackTech; index: number }) {
   const project = tech.project ? caseStudies.find((c) => c.slug === tech.project) : undefined;
@@ -60,10 +56,10 @@ function Detail({ layer, tech, index }: { layer: StackLayer; tech: StackTech; in
         )}
 
         {project && (
-          <button type="button" onClick={() => openCaseStudy(project.slug)} className="btn btn-ghost group mt-7 w-full justify-between sm:w-auto">
-            Open {project.title} case study
+          <Link href={`/projects/${project.slug}`} className="btn btn-ghost group mt-7 w-full justify-between sm:w-auto">
+            Open {project.title}
             <ArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
-          </button>
+          </Link>
         )}
       </div>
     </div>
@@ -98,7 +94,7 @@ export function Engineering() {
   return (
     <section id="system" className="relative border-t border-line">
       <div className="mx-auto max-w-7xl px-5 py-28 md:px-8 md:py-36">
-        <SectionHeading index="04" eyebrow="Skills · How I build" title="How I build">
+        <SectionHeading index="03" eyebrow="Skills · How I build" title="How I build">
           Not a list of logos — a system. Each layer calls the one below it. Select a component to see where it runs in real work.
         </SectionHeading>
 

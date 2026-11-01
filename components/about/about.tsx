@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Fragment, type CSSProperties } from "react";
 import { about, award, certifications, education, profile, story } from "@/lib/content/profile";
@@ -63,7 +64,7 @@ export function About() {
 
           <div className="lg:col-span-5">
             <div data-reveal className="eyebrow flex items-center gap-3">
-              <span className="text-accent">05</span>
+              <span className="text-accent">04</span>
               <span className="h-px w-8 bg-line-strong" aria-hidden />
               <span>About</span>
             </div>
@@ -90,9 +91,9 @@ export function About() {
 
             <div data-reveal style={delay(280)} className="mt-10 flex flex-wrap items-center gap-3">
               <Magnetic>
-                <a href="#contact" className="btn btn-primary group h-12 px-6">
+                <Link href="/contact" className="btn btn-primary group h-12 px-6">
                   Hire me <ArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                </a>
+                </Link>
               </Magnetic>
               <Magnetic>
                 <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-ghost h-12 px-6">
