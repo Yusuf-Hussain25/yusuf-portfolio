@@ -100,6 +100,13 @@
   letter-spacing: -0.02em;
   color: var(--muted);
 }
+/* real company logo fills the tile */
+.exp-logo {
+  overflow: hidden;
+  padding: 0;
+  background: var(--surface);
+}
+
 .exp-card-now .exp-monogram {
   border-color: color-mix(in oklab, var(--accent) 30%, transparent);
   background: var(--accent-muted);

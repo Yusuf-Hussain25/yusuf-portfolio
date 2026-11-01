@@ -10,6 +10,8 @@ export type Company = {
   status: "now" | "previous";
   org: string;
   monogram: string;
+  /** Company logo (square), from the company's own website. Falls back to the monogram. */
+  logo?: string;
   kind: string;
   role: string;
   start: string; // YYYY-MM
@@ -28,6 +30,7 @@ export const companies: Company[] = [
     status: "now",
     org: "Freedom With AI",
     monogram: "FW",
+    logo: "/images/companies/freedom-with-ai.png",
     kind: "AI company",
     role: "AI Developer · Project Lead",
     start: "2025-12",
@@ -75,6 +78,7 @@ export const companies: Company[] = [
     status: "previous",
     org: "KVL Business Solutions",
     monogram: "KV",
+    logo: "/images/companies/kvl-business-solutions.png",
     kind: "Software company",
     role: "Full Stack Developer",
     start: "2024-08",

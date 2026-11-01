@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 import { careerMove, companies, experienceHighlights, type Company } from "@/lib/content/experience";
 import { LogoMark, TechLogo } from "@/components/engineering/tech-logo";
@@ -82,8 +83,8 @@ function Identity({ company: c, index, active, onJump }: { company: Company; ind
       </div>
 
       <div className="mt-6 flex items-center gap-4">
-        <span aria-hidden className="exp-monogram">
-          {c.monogram}
+        <span aria-hidden className={`exp-monogram ${c.logo ? "exp-logo" : ""}`}>
+          {c.logo ? <Image src={c.logo} alt="" width={52} height={52} className="h-full w-full object-cover" /> : c.monogram}
         </span>
         <div className="min-w-0">
           <h3 id={`exp-${c.id}`} className="text-[1.5rem] font-semibold leading-tight tracking-tight md:text-[1.7rem]">
